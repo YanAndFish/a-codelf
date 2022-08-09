@@ -53,9 +53,9 @@ interface RepoResult {
   /** 关键词 */
   keyword: string
   /** 仓库地址 */
-  repoLink: any
+  repoLink: string
   /** 仓库语言 */
-  repoLang: any
+  repoLang: SearchLanguage | 'Unknown'
 }
 
 /**
