@@ -10,6 +10,7 @@ export interface TranslateResult {
  * 翻译器
  */
 export abstract class Translater {
+  /** 查询缓存 */
   protected readonly cache: Store
 
   constructor(storagePrefix?: string) {
@@ -72,5 +73,10 @@ export abstract class Translater {
     )
   }
 
+  /**
+   * 请求翻译结果
+   * @param query 目标查询
+   * @returns 翻译结果,如果有异常发生则返回null
+   */
   public abstract request(query: string): Promise<TranslateResult | null>
 }

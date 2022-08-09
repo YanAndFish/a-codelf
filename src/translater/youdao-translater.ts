@@ -1,4 +1,4 @@
-import { formatJSONP, SHA256 } from '@/util'
+import { SHA256 } from '@/util'
 import axios from 'axios'
 import { Translater, TranslateResult } from './translater'
 import { stringify } from 'qs'

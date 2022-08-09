@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ACodelfClientOption } from '../src/client'
+import { ACodelfClientOption, createACodelf } from '../src/client'
 import { BaiduTranslater } from '../src/translater/baidu-translater'
 import { BingTranslater } from '../src/translater/bing-translater'
 import 'dotenv/config'
@@ -24,10 +24,21 @@ const option: ACodelfClientOption = {
 
 //const baidu = new BaiduTranslater(option.translater?.baidu!)
 //const bing = new BingTranslater(option.translater?.bing!)
-const youdao = new YoudaoTranslater(option.translater?.youdao!)
-youdao.request('篮球').then(console.log)
+//const youdao = new YoudaoTranslater(option.translater?.youdao!)
+//youdao.request('篮球').then(console.log)
 
 // const str = '篮球' // ea2eed1fb5e122c77dfe68eec3616839
 // const md5 = MD5(str)
 
 // console.log('md5:', md5, 'pass?:', md5 === 'ea2eed1fb5e122c77dfe68eec3616839')
+
+const client = createACodelf(option)
+
+client
+  .requestVariable({
+    query: '摄像头',
+    lang: [],
+  })
+  .then(res => {
+    console.log(res)
+  })
