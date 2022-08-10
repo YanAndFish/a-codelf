@@ -25,6 +25,14 @@ export interface ACodelfClientOption {
     bing?: BingTranslaterOption
     youdao?: YoudaoTranslaterOption
   }
+  /**
+   * 结果缓存
+   * @default { expire: 7 * 24 * 60 * 60 * 1000, storageType: 'local' }
+   */
+  cache?: {
+    expire: number
+    storageType: 'local' | 'session' | 'memory'
+  }
 }
 
 /**
@@ -84,11 +92,7 @@ export class ACodelfClient {
   private readonly translaters: Translater[] = []
 
   /** 变量列表缓存 */
-  private readonly variableListStore = new Store(
-    Infinity,
-    'session',
-    'variable_list_key'
-  )
+  private readonly variableListStore: Store
 
   constructor(private readonly option: ACodelfClientOption) {
     if (option?.translater?.youdao) {
@@ -100,6 +104,12 @@ export class ACodelfClient {
     if (option?.translater?.bing) {
       this.translaters.push(new BingTranslater(option.translater.bing))
     }
+
+    this.variableListStore = new Store(
+      option.cache?.expire || 7 * 24 * 60 * 60 * 1000,
+      option.cache?.storageType || 'local',
+      'variable_list_key'
+    )
   }
 
   /**

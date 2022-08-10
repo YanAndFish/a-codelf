@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ACodelfClientOption, createACodelf } from '../src/client'
-import { BaiduTranslater } from '../src/translater/baidu-translater'
-import { BingTranslater } from '../src/translater/bing-translater'
+// import { ACodelfClientOption, createACodelf } from '../src/client'
+// import { BaiduTranslater } from '../src/translater/baidu-translater'
+// import { BingTranslater } from '../src/translater/bing-translater'
 import 'dotenv/config'
-import { MD5 } from '../src/util'
-import { YoudaoTranslater } from '../src/translater/youdao-translater'
+// import { MD5 } from '../src/util'
+// import { YoudaoTranslater } from '../src/translater/youdao-translater'
+
+import { createACodelf, ACodelfClientOption } from '../dist'
 
 const option: ACodelfClientOption = {
   translater: {
@@ -19,6 +21,10 @@ const option: ACodelfClientOption = {
       appId: process.env.youdao_appId!,
       appKey: process.env.youdao_appKey!,
     },
+  },
+  cache: {
+    expire: Infinity,
+    storageType: 'memory',
   },
 }
 
