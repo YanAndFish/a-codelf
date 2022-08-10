@@ -344,6 +344,9 @@ export class ACodelfClient {
  * @param option 选项
  * @returns
  */
-export function createACodelf(option: ACodelfClientOption): ACodelfClient {
-  return new ACodelfClient(option)
+export function createACodelf(
+  option: ACodelfClientOption
+): () => ACodelfClient {
+  const client = new ACodelfClient(option)
+  return () => client
 }

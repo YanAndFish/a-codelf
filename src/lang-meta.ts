@@ -25,6 +25,6 @@ export const topProgramLan = {
   Shell: '69,78,146',
   Lisp: '29',
   ActionScript: '42',
-}
+} as const
 
 export type SearchLanguage = keyof typeof topProgramLan

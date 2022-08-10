@@ -32,9 +32,9 @@ const option: ACodelfClientOption = {
 
 // console.log('md5:', md5, 'pass?:', md5 === 'ea2eed1fb5e122c77dfe68eec3616839')
 
-const client = createACodelf(option)
+const useClient = createACodelf(option)
 
-client
+useClient()
   .requestVariable({
     query: '摄像头',
     lang: [],
