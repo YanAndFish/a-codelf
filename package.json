@@ -1,5 +1,5 @@
 {
-  "name": "@yafh/a-codeif",
+  "name": "@yafh/a-codelf",
   "version": "0.0.1",
   "description": "codeif api",
   "main": "dist/index.js",
@@ -19,19 +19,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YanAndFish/a-codeif.git"
+    "url": "git+https://github.com/YanAndFish/a-codelf.git"
   },
   "keywords": [
-    "codeif",
+    "codelf",
     "translate",
     "param"
   ],
   "author": "YanAndFish <383904425@qq.com>",
   "license": "snts",
   "bugs": {
-    "url": "https://github.com/YanAndFish/a-codeif/issues"
+    "url": "https://github.com/YanAndFish/a-codelf/issues"
   },
-  "homepage": "https://github.com/YanAndFish/a-codeif#readme",
+  "homepage": "https://github.com/YanAndFish/a-codelf#readme",
   "packageManager": "pnpm@6.11.0",
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",
