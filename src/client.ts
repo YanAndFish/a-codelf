@@ -271,7 +271,10 @@ export class ACodelfClient {
       ? '&lan=' + _lang.join(',').split(',').join('&lan=')
       : ''
     const qParams = query.replace(' ', '+')
-    const url = `https://searchcode.com/api/codesearch_I/?callback=?&q=${qParams}&p=${page}&per_page=42${langParams}`
+    const url = `${
+      this.option.request?.searchcodeUrl ||
+      'https://searchcode.com/api/codesearch_I/'
+    }?callback=?&q=${qParams}&p=${page}&per_page=42${langParams}`
 
     const res = (await axios.get(url, { proxy: this.option.request?.proxy }))
       .data
