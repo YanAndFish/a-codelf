@@ -26,6 +26,12 @@ const option: ACodelfClientOption = {
     expire: Infinity,
     storageType: 'memory',
   },
+  request: {
+    proxy: {
+      host: '192.168.31.89',
+      port: 3180,
+    },
+  },
 }
 
 //const baidu = new BaiduTranslater(option.translater?.baidu!)
@@ -42,8 +48,8 @@ const useClient = createACodelf(option)
 
 useClient()
   .requestVariable({
-    query: '摄像头',
-    lang: [],
+    query: '篮球',
+    lang: ['Java'],
   })
   .then(res => {
     console.log(res)

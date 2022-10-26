@@ -1,5 +1,5 @@
 import { formatJSONP, MD5 } from '@/util'
-import axios from 'axios'
+import axios, { type AxiosProxyConfig } from 'axios'
 import { Translater, TranslateResult } from './translater'
 /**
  * 特别重要，必读！
@@ -10,6 +10,7 @@ import { Translater, TranslateResult } from './translater'
 export interface BaiduTranslaterOption {
   translateAppId: string
   translateKey: string
+  translateUrl?: string
 }
 
 /**
@@ -18,20 +19,26 @@ export interface BaiduTranslaterOption {
 export class BaiduTranslater extends Translater {
   private readonly translateAppId: string
   private readonly translateKey: string
+  private readonly translateEndpoint: string
 
-  constructor(option: BaiduTranslaterOption) {
-    super('baidu')
+  constructor(option: BaiduTranslaterOption, proxy?: AxiosProxyConfig) {
+    super('baidu', proxy)
     this.translateAppId = option.translateAppId
     this.translateKey = option.translateKey
+    this.translateEndpoint =
+      option?.translateUrl ||
+      'https://fanyi-api.baidu.com/api/trans/vip/translate'
   }
 
   private genUrl(query: string): string {
     const translateSalt = Date.now()
-    const translateEndpoint = `https://fanyi-api.baidu.com/api/trans/vip/translate?callback=?&from=auto&to=en&appid=${this.translateAppId}&salt=${translateSalt}`
+
     const sign = MD5(
       `${this.translateAppId}${query}${translateSalt}${this.translateKey}`
     ) // appid+q+salt+密钥 的MD5值
-    return `${translateEndpoint}&q=${encodeURIComponent(query)}&sign=${sign}`
+    return `${this.translateEndpoint}?callback=?&from=auto&to=en&appid=${
+      this.translateAppId
+    }&salt=${translateSalt}&q=${encodeURIComponent(query)}&sign=${sign}`
   }
 
   public async request(query: string): Promise<TranslateResult | null> {
@@ -42,7 +49,7 @@ export class BaiduTranslater extends Translater {
 
     try {
       const url = this.genUrl(query)
-      const res = formatJSONP(await axios.get(url))
+      const res = formatJSONP(await axios.get(url, { proxy: this.proxy }))
       if (res && res.trans_result) {
         let translation = res.trans_result.map((key: { dst: any }) => key.dst)
         const suggestion = this.formatSuggestionStr(translation.join(' '))

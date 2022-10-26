@@ -1,4 +1,5 @@
 import { Store } from '@/store'
+import type { AxiosProxyConfig } from 'axios'
 
 /** 翻译返回结果 */
 export interface TranslateResult {
@@ -12,9 +13,12 @@ export interface TranslateResult {
 export abstract class Translater {
   /** 查询缓存 */
   protected readonly cache: Store
+  /** 请求代理 */
+  protected readonly proxy?: AxiosProxyConfig
 
-  constructor(storagePrefix?: string) {
+  constructor(storagePrefix?: string, proxy?: AxiosProxyConfig) {
     this.cache = new Store(Infinity, 'session', storagePrefix)
+    this.proxy = proxy
   }
 
   /**

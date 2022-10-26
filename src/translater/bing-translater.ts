@@ -1,8 +1,9 @@
-import axios from 'axios'
+import axios, { type AxiosProxyConfig } from 'axios'
 import { Translater, TranslateResult } from './translater'
 
 export interface BingTranslaterOption {
   translateKey: string
+  translateUrl?: string
 }
 
 /**
@@ -15,15 +16,16 @@ export interface BingTranslaterOption {
 // curl -X POST "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=en" -H "Ocp-Apim-Subscription-Key: 445fd33be8764339add46f0770ac617d" -H "Content-Type: application/json; charset=UTF-8" -d "[{'Text':'咸鱼'}]"
 export class BingTranslater extends Translater {
   private readonly translateKey: string
-  constructor(option: BingTranslaterOption) {
-    super('bing')
+  private readonly translateEndpoint: string
+  constructor(option: BingTranslaterOption, proxy?: AxiosProxyConfig) {
+    super('bing', proxy)
     this.translateKey = option.translateKey
+    this.translateEndpoint =
+      option?.translateUrl ||
+      'https://api.cognitive.microsofttranslator.com/translate'
   }
 
   public async request(query: string): Promise<TranslateResult | null> {
-    const translateEndpoint =
-      'https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=en'
-
     const cache = this.cache.get(query)
     if (cache) {
       return cache
@@ -32,7 +34,7 @@ export class BingTranslater extends Translater {
     try {
       const res = (
         await axios.post(
-          translateEndpoint,
+          `${this.translateEndpoint}?api-version=3.0&to=en`,
           query.split(' ').map(text => {
             return { Text: text }
           }),
@@ -41,6 +43,7 @@ export class BingTranslater extends Translater {
               'Ocp-Apim-Subscription-Key': this.translateKey,
               'Content-Type': 'application/json; charset=UTF-8',
             },
+            proxy: this.proxy,
           }
         )
       ).data

@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosProxyConfig } from 'axios'
 import { SearchLanguage, topProgramLan } from './lang-meta'
 import { Store } from './store'
 import {
@@ -32,6 +32,12 @@ export interface ACodelfClientOption {
   cache?: {
     expire: number
     storageType: 'local' | 'session' | 'memory'
+  }
+  /**
+   * 请求配置
+   */
+  request?: {
+    proxy?: AxiosProxyConfig
   }
 }
 
@@ -96,13 +102,22 @@ export class ACodelfClient {
 
   constructor(private readonly option: ACodelfClientOption) {
     if (option?.translater?.youdao) {
-      this.translaters.push(new YoudaoTranslater(option.translater.youdao))
+      this.translaters.push(
+        new YoudaoTranslater(
+          option.translater.youdao,
+          this.option.request?.proxy
+        )
+      )
     }
     if (option?.translater?.baidu) {
-      this.translaters.push(new BaiduTranslater(option.translater.baidu))
+      this.translaters.push(
+        new BaiduTranslater(option.translater.baidu, this.option.request?.proxy)
+      )
     }
     if (option?.translater?.bing) {
-      this.translaters.push(new BingTranslater(option.translater.bing))
+      this.translaters.push(
+        new BingTranslater(option.translater.bing, this.option.request?.proxy)
+      )
     }
 
     this.variableListStore = new Store(
@@ -160,7 +175,7 @@ export class ACodelfClient {
    * @param keywords
    * @returns
    */
-  private parseVariableList(results: any[], keywords: any): RepoResult[] {
+  private parseVariableList(results: any[], keywords: string): RepoResult[] {
     const vals: string[] = []
     const variables: RepoResult[] = []
     results.forEach(res => {
@@ -257,7 +272,8 @@ export class ACodelfClient {
     const qParams = query.replace(' ', '+')
     const url = `https://searchcode.com/api/codesearch_I/?callback=?&q=${qParams}&p=${page}&per_page=42${langParams}`
 
-    const res = (await axios.get(url)).data
+    const res = (await axios.get(url, { proxy: this.option.request?.proxy }))
+      .data
     if (!res.results) {
       return []
     }

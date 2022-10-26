@@ -1,11 +1,12 @@
 import { SHA256 } from '@/util'
-import axios from 'axios'
+import axios, { type AxiosProxyConfig } from 'axios'
 import { Translater, TranslateResult } from './translater'
 import { stringify } from 'qs'
 
 export interface YoudaoTranslaterOption {
   appId: string
   appKey: string
+  translateUrl?: string
 }
 
 /**
@@ -17,11 +18,14 @@ export interface YoudaoTranslaterOption {
 export class YoudaoTranslater extends Translater {
   private readonly appId: string
   private readonly appKey: string
+  private readonly translateEndpoint: string
 
-  constructor(option: YoudaoTranslaterOption) {
-    super('youdao')
+  constructor(option: YoudaoTranslaterOption, proxy?: AxiosProxyConfig) {
+    super('youdao', proxy)
     this.appId = option.appId
     this.appKey = option.appKey
+    this.translateEndpoint =
+      option?.translateUrl || 'https://openapi.youdao.com/api'
   }
 
   private truncate(query: string): string {
@@ -35,14 +39,14 @@ export class YoudaoTranslater extends Translater {
     if (cache) {
       return cache
     }
-    const translateEndpoint = 'https://openapi.youdao.com/api'
+
     const salt = Date.now()
     const curtime = Math.round(new Date().getTime() / 1000)
 
     try {
       const data = (
         await axios.post(
-          translateEndpoint,
+          this.translateEndpoint,
           stringify({
             from: 'auto',
             to: 'en',
@@ -59,6 +63,7 @@ export class YoudaoTranslater extends Translater {
           }),
           {
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            proxy: this.proxy,
           }
         )
       ).data
