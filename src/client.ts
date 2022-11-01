@@ -89,6 +89,8 @@ export interface VariableResult {
   suggestion: string[]
   /** 是否为中文源语言查询 */
   isZH: boolean
+  /** 翻译原结果列表(如果使用翻译) */
+  translationRaw: string[]
 }
 
 /**
@@ -308,6 +310,7 @@ export class ACodelfClient {
       searchValue: queryOption.query,
       suggestion: [],
       variableList: [],
+      translationRaw: [],
     }
 
     if (queryOption.query !== undefined && queryOption.query !== null) {
@@ -336,6 +339,7 @@ export class ACodelfClient {
         _query = translate.translation || ''
         suggestion = this.parseSuggestion(translate.suggestion, suggestion)
         suggestion = this.parseSuggestion(_query.split(' '), suggestion)
+        res.translationRaw = translate.translationRaw
       }
     }
     res.suggestion = suggestion

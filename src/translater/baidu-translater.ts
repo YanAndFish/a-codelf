@@ -54,7 +54,11 @@ export class BaiduTranslater extends Translater {
         let translation = res.trans_result.map((key: { dst: any }) => key.dst)
         const suggestion = this.formatSuggestionStr(translation.join(' '))
         translation = this.formatTranslationArr(translation)
-        const response = { suggestion, translation }
+        const response = {
+          suggestion,
+          translation,
+          translationRaw: [translation],
+        } as TranslateResult
         this.cache.save(query, response)
         return response
       } else {

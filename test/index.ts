@@ -14,23 +14,17 @@ const option: ACodelfClientOption = {
       translateAppId: process.env.baidu_translateAppId!,
       translateKey: process.env.baidu_translateKey!,
     },
-    bing: {
-      translateKey: process.env.bing_translateKey!,
-    },
-    youdao: {
-      appId: process.env.youdao_appId!,
-      appKey: process.env.youdao_appKey!,
-    },
+    // bing: {
+    //   translateKey: process.env.bing_translateKey!,
+    // },
+    // youdao: {
+    //   appId: process.env.youdao_appId!,
+    //   appKey: process.env.youdao_appKey!,
+    // },
   },
   cache: {
     expire: Infinity,
     storageType: 'memory',
-  },
-  request: {
-    proxy: {
-      host: '192.168.31.89',
-      port: 3180,
-    },
   },
 }
 
@@ -48,8 +42,7 @@ const useClient = createACodelf(option)
 
 useClient()
   .requestVariable({
-    query: '篮球',
-    lang: ['Java'],
+    query: '招聘专员',
   })
   .then(res => {
     console.log(res)

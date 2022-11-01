@@ -34,6 +34,16 @@ export class YoudaoTranslater extends Translater {
     return query.substring(0, 10) + len + query.substring(len - 10, len)
   }
 
+  private getTranslationRaw(resultData: any): string[] {
+    if (resultData?.basic?.explains) {
+      return resultData?.basic?.explains
+    } else if (resultData?.web?.[0]?.value) {
+      return resultData?.web?.[0]?.value
+    } else {
+      return []
+    }
+  }
+
   public async request(query: string): Promise<TranslateResult | null> {
     const cache = this.cache.get(query)
     if (cache) {
@@ -86,7 +96,11 @@ export class YoudaoTranslater extends Translater {
       if (data && data.translation) {
         translation = this.formatTranslationArr(data.translation)
       }
-      const response = { suggestion, translation }
+      const response = {
+        suggestion,
+        translation,
+        translationRaw: this.getTranslationRaw(data),
+      } as TranslateResult
       this.cache.save(query, response)
       return response
     } catch (e) {

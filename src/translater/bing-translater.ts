@@ -62,7 +62,11 @@ export class BingTranslater extends Translater {
         if (translation) {
           translation = this.formatTranslationArr(translation)
         }
-        const response = { suggestion, translation }
+        const response = {
+          suggestion,
+          translation,
+          translationRaw: [suggestionStr],
+        } as TranslateResult
         this.cache.save(query, response)
         return response
       } else {

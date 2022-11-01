@@ -5,6 +5,7 @@ import type { AxiosProxyConfig } from 'axios'
 export interface TranslateResult {
   suggestion: string[]
   translation: string | null
+  translationRaw: string[]
 }
 
 /**
